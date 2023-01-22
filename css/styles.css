@@ -880,7 +880,7 @@ input[type="checkbox"] {
   padding-top: 6.5rem;
   padding-bottom: 3rem;
   /* background:#030d1a; */
-      background: linear-gradient(160deg, #54040c, #942810, #fc5e15, #ff5f15);
+      background: url("https://res.cloudinary.com/dlt3bvszo/image/upload/v1674371693/rhythm/div_intro11_ivhxtb.png");
 }
 
 .basic-1 .text-container {
@@ -1380,7 +1380,7 @@ input[type="checkbox"] {
 .filter {
   padding-top: 6.5rem;
   padding-bottom: 7rem;
-  background: url(../images/rhy3.png);
+  background: url("https://res.cloudinary.com/dlt3bvszo/image/upload/v1674372255/rhythm/menu1compressed_yialqt.png");
   background-size: cover;
   /* background-attachment: fixed; */
 }
