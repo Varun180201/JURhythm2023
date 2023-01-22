@@ -177,17 +177,17 @@ strong {
   display: inline-block;
   padding: 1.375rem 2.125rem 1.375rem 2.125rem;
   border: 0.125rem solid #642214;
-  border-radius: 0.25rem;
-  background-color: #8b220c;
-  color: #fff;
+  border-radius: 5rem;
+  background-color: #fed09b;
+  color: #642214;
   font: 700 0.75rem/0 "Montserrat", sans-serif;
   text-decoration: none;
   transition: all 0.2s;
 }
 
 .btn-solid-lg:hover {
-  background-color: transparent;
-  color: #2e86c1;
+  background-color: #8b220c;
+  color: #fed09b;
   text-decoration: none;
 }
 
@@ -723,7 +723,7 @@ input[type="checkbox"] {
 
 .navbar-custom .nav-item .nav-link:hover,
 .navbar-custom .nav-item .nav-link.active {
-  color: #2e86c1;
+  color: #fed09b;
 }
 
 /* Dropdown Menu */
@@ -864,7 +864,8 @@ input[type="checkbox"] {
 
 .header .p-large {
   margin-bottom: 2rem;
-  color: #302f2f;
+  color: white;
+  font-weight: 600;
 }
 
 .header .btn-solid-lg {
@@ -1151,7 +1152,7 @@ input[type="checkbox"] {
 
 .tabs .nav-link:hover,
 .tabs .nav-link.active {
-  color: #2e86c1;
+  color: #fed09b;
 }
 
 .tabs .nav-link .fas {
@@ -1639,7 +1640,7 @@ input[type="checkbox"] {
 }
 
 .basic-2 .fa-stack:hover .fa-stack-1x {
-  color: #2e86c1;
+  color: #fed09b;
 }
 
 /*********************/
@@ -1712,7 +1713,7 @@ input[type="checkbox"] {
 .form-2 {
   padding-top: 6.625rem;
   padding-bottom: 5.625rem;
-  background-color: #030d1a;
+  background-color: #c62a26;
 }
 
 .form-2 .text-container {
@@ -1778,7 +1779,7 @@ input[type="checkbox"] {
 }
 
 .form-2 .fa-stack:hover .fa-stack-1x {
-  color: #2e86c1;
+  color: #fed09b;
 }
 
 /**********************/
@@ -1938,7 +1939,7 @@ a:hover.back-to-top {
 
   .navbar-custom .nav-item .nav-link:hover,
   .navbar-custom .nav-item .nav-link.active {
-    color: #2e86c1;
+    color: #fed09b;
   }
 
   .navbar-custom.top-nav-collapse {
@@ -1957,7 +1958,7 @@ a:hover.back-to-top {
 
   .navbar-custom.top-nav-collapse .nav-item .nav-link:hover,
   .navbar-custom.top-nav-collapse .nav-item .nav-link.active {
-    color: #2e86c1;
+    color: #fed09b;
   }
 
   .navbar-custom .dropdown-menu {
@@ -2128,9 +2129,7 @@ a:hover.back-to-top {
     padding-bottom: 15rem;
   }
 
-  .header .text-container {
-    margin-top: 6.5rem;
-  }
+  
   /* end of header */
 
   /* Intro */
