@@ -1389,7 +1389,7 @@ input[type="checkbox"] {
 .filter {
   padding-top: 6.5rem;
   padding-bottom: 7rem;
-  background: url("https://res.cloudinary.com/dlt3bvszo/image/upload/v1674372255/rhythm/menu1compressed_yialqt.png");
+  background: url(https://res.cloudinary.com/dlt3bvszo/image/upload/v1674476993/rhythm/menu1_final_uy2ubz.png);
   background-size: cover;
   /* background-attachment: fixed; */
 }
@@ -2281,7 +2281,7 @@ a:hover.back-to-top {
   .form-2 {
     padding-top: 6.875rem;
     /* background: linear-gradient(160deg, #030d1a, #a7004679, #4b00acc0, #1a1603); */
-    background-image: url(../images/contact.png);
+    background-image: url(https://res.cloudinary.com/dlt3bvszo/image/upload/v1674476566/rhythm/rhy11_jnaziy.png);
     background-color: #000;
   }
 
