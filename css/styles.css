@@ -836,6 +836,15 @@ input[type="checkbox"] {
     /* height: 50%; */
   }
 }
+@media screen and (max-width: 768px) {
+  .header {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+      url("../images/responsive\ home\ page\ test.png") center center no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    /* height: 50%; */
+  }
+}
 
 .header .header-content {
   padding-top: 8rem;
