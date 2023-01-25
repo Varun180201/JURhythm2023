@@ -859,7 +859,8 @@ input[type="checkbox"] {
 .header .text-header {
   margin-bottom: 0.5rem;
   color: #6a1909 !important;
-  font-family: "Nasalization", sans-serif;
+  font-family: "normal",samarkan;
+  top: 100px;
   letter-spacing: 10px;
   font-size: 110px;
 }
