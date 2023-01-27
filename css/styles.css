@@ -866,9 +866,9 @@ input[type="checkbox"] {
 }
 @media screen and (max-width: 1000px) {
   .header .text-header {
-    font-family: "Nasalization", sans-serif;
+    font-family: "normal",samarkan;
     letter-spacing: 10px;
-    font-size: 50px;
+    font-size: 60px;
   }
 }
 
@@ -2483,6 +2483,14 @@ a:hover.back-to-top {
   body {
     width: fit-content;
   }
+}
+@media (max-width: 478px) {
+  .header .text-header {
+    font-size: 40px;
+  }
+}
+@media (max-width: 378px) {
+  
 }
 
 

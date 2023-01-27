@@ -10,7 +10,7 @@
 .gallery-section{
   width: 100%;
   padding: 60px 0;
-  background: url(../images/bg13.jpg);
+  background: url('https://res.cloudinary.com/dlt3bvszo/image/upload/v1674476993/rhythm/menu1_final_uy2ubz.png');
   background-attachment: fixed;
   background-size: cover;
 }
