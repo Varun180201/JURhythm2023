@@ -269,6 +269,21 @@ strong {
   transition: all 0.2s ease;
 }
 
+.bar_content {
+  display: block; 
+
+  width: 100%;
+  transform: translateX(100%); 
+
+
+  animation: move 10s linear infinite;
+}
+
+
+@keyframes move {
+  to { transform: translateX(-100%); }
+}
+
 /* IE10+ hack to solve lower label text position compared to the rest of the browsers */
 @media screen and (-ms-high-contrast: active),
   screen and (-ms-high-contrast: none) {
