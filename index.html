@@ -1,6 +1,2053 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <H1>THIS WEBSITE IS UNDER MAINTENANCE.</H1>
-    </head>
+<html lang="en">
+<head>
+    <!---->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Aria is a business focused HTML landing page template built with Bootstrap to help you create lead generation websites for companies and their services.">
+    <meta name="author" content="JIC E-Cell">
+
+   
+
+    <!-- Website Title -->
+    <title>JU-RHYTHM | Beats Of Imagination</title>
+    
+    <!-- Styles -->
+    <link href="//db.onlinewebfonts.com/c/7c274d633694f9a2be5321cfa4b31f8e?family=Blade+Runner+Movie+Font" rel="stylesheet" type="text/css"/> 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/fontawesome-all.css" rel="stylesheet">
+    <link href="css/swiper.css" rel="stylesheet">
+	<link href="css/magnific-popup.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <link href="https://fonts.cdnfonts.com/css/nasalization-2" rel="stylesheet">
+                
+	<!-- Favicon  -->
+    <link rel="icon" href="images/logo.png">
+</head>
+
+
+
+<body data-spy="scroll" data-target=".fixed-top">
+    
+  
+<canvas id="canvas" class="canvas"></canvas>
+<!-- <script>'use strict';
+
+    let mouse, originx, originy, int, cvs;
+    
+    // Safari doesn't support EventTarget
+    var EventTarget = EventTarget || false;
+    
+    // addEventListener shorthand
+    if (EventTarget) {
+      EventTarget.prototype.evt = function (event, callback) {
+        return this.addEventListener(event, callback);
+      }
+    } else {
+      window.evt = function (event, callback) {
+        return this.addEventListener(event, callback);
+      };
+      document.evt = function (event, callback) {
+        return this.addEventListener(event, callback);
+      };
+      Element.prototype.evt = function (event, callback) {
+        return this.addEventListener(event, callback);
+      };
+    }
+    
+    // getElementById shorthand
+    function $(elemId) {
+        return document.getElementById(elemId);
+    }
+    
+    function init() {
+        cvs = $("canvas");
+    
+        resizeCanvas(cvs);
+    
+        window.evt('resize', resizeCanvas, false);
+        window.evt("mousemove", function (e) {
+            mouse = getMousePos(cvs, e);
+            originx = mouse.x;
+            originy = mouse.y;
+          
+        });
+        // window.evt("touchmove", function (e) {
+        //     originx = e.originalEvent.touches[0].pageX;
+        //     originy = e.originalEvent.touches[0].pageY;
+        // });
+    
+        var network = new Field(0, 0, 50);
+        var emit = new Emitter(0, 0, 50);
+        
+        animateCanvas(cvs, function () {
+            network.animate();
+            emit.animate();
+        });
+    }
+    
+    // Individual particle
+    class Point {
+        constructor(x, y, canvas, dia) {
+            this.canvas = canvas || cvs;
+            this.x = x || 0;
+            this.y = y || 0;
+            this.vx = 0;
+            this.vy = 0;
+            this.speed = Math.random() * .5 + .2;
+            this.angle = Math.random() * 360;
+            this.diaSet = dia || 2 + Math.random() * 10;
+            this.dia = this.diaSet;
+            this.age = 0;
+            let hue = Math.floor(Math.random()*360);
+            this.fill = 'hsl('+hue+', 95%, 70%)';
+            this.line = Math.random() > .5 ? true : false;
+        }
+    
+        emit(life) {
+            let s = this.speed * 2;
+            this.angle += Math.random() * 10 - 5;
+            this.x += s * Math.cos(this.angle * Math.PI / 180);
+            this.y += s * Math.sin(this.angle * Math.PI / 180);
+            this.age += 1 / life;
+            this.boundary();
+        }
+    
+        boundary() {
+            if (this.x < 0) {
+                this.x = this.canvas.width;
+            }
+            if (this.x > this.canvas.width) {
+                this.x = 0;
+            }
+            if (this.y < 0) {
+                this.y = this.canvas.height;
+            }
+            if (this.y > this.canvas.height) {
+                this.y = 0;
+            }
+        }
+    
+        field(life) {
+            let s = this.speed;
+            this.angle += Math.random() * 10 - 5;
+            this.x += s * Math.cos(this.angle * Math.PI / 180);
+            this.y += s * Math.sin(this.angle * Math.PI / 180);
+            this.age += 1 / life;
+            this.boundary();
+        }
+    
+        shrink(life) {
+            this.dia = (1 - this.age) * this.diaSet;
+        }
+    
+        draw() {
+            let ctx = this.canvas.getContext('2d'),
+                x = this.x,
+                y = this.y,
+                dia = this.dia,
+                age = this.age;
+    
+            ctx.beginPath();
+            ctx.fillStyle = this.fill;
+            ctx.strokeStyle = this.fill;
+            ctx.lineWidth = 2;
+            ctx.arc(x, y, dia, 0, 2 * Math.PI);
+            ctx.closePath();
+            
+            this.line !== true ? ctx.fill() : ctx.stroke();
+        }
+    }
+    
+    class ParticleGroup {
+    
+        setPosition(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+    
+        getPosition(x, y) {
+            return {
+                x: this.x,
+                y: this.y
+            };
+        }
+    
+        spawn(x, y, amount, dia) {
+    
+            var arr = [];
+            dia = dia || false;
+    
+            amount = amount || 1;
+    
+            if (amount > 1) {
+                for (let i = 0; i < amount; i++) {
+                    if (dia) {
+                        arr.push(new Point(x, y, cvs, dia));
+                    }
+                    else {
+                        arr.push(new Point(x, y, cvs));
+                    }
+                    
+                }
+            } else {
+                arr = new Point(x, y, cvs, dia);
+            }
+    
+            return arr;
+        }
+    }
+    
+    // Particle Emitter
+    class Emitter extends ParticleGroup {
+        constructor(x, y, life, mouse, dia) {
+            super();
+    
+            if (mouse === undefined) {
+                this.mouse = true;
+            } else {
+                this.mouse = mouse;
+            }
+    
+            this.particles = [];
+            this.x = x || 0;
+            this.y = y || 0;
+            this.life = life || 20;
+            this.canvas = cvs;
+            this.dia = dia || false;
+        }
+    
+        animate() {
+            let particles = this.particles;
+            if (this.mouse) {
+                this.setPosition(originx, originy);
+            }
+    
+            let mul = 1;
+    
+            for (let i = 0; i < mul; i++) {
+                particles.push(this.spawn(this.x, this.y, 1));
+            }
+            
+            if (particles.length > this.life * mul) {
+                for (let i = 0; i < mul; i++) {
+                    particles.shift();
+                }
+            }
+    
+            this.render(this.canvas);
+        }
+        
+        render() {
+            let life = this.life;
+            let ctx = this.canvas.getContext('2d');
+            let particles = this.particles;
+    
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.draw();
+                p.emit(this.life);
+                p.shrink();
+            }
+        }
+    }
+    
+    // Particle Field
+    class Field extends ParticleGroup {
+        constructor(x, y, life) {
+            super();
+            this.particles = [];
+            this.canvas = cvs;
+            this.x = x || 0;
+            this.y = y || 0;
+            this.life = life;
+    
+            for (let i = 0; i < this.life; i++) {
+                let x = Math.random() * cvs.width,
+                    y = Math.random() * cvs.height;
+    
+                this.particles.push(this.spawn(x, y, 1));
+            }
+        }
+    
+        animate() {
+            this.render(canvas);
+        }
+    
+        render(canvas) {
+            let ctx = this.canvas.getContext('2d');
+            let particles = this.particles;
+    
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.draw();
+                p.field(this.life);
+            }
+        }
+    }
+    
+    // get the mouse position relative to the canvas
+    function getMousePos(cvs, evt) {
+        const rect = cvs.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+    
+    // animate the canvas
+    function animateCanvas(canvas, callback) {
+    
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        callback();
+    
+        requestAnimationFrame(animateCanvas.bind(null, canvas, callback));
+    }
+    
+    // Update canvas size to fill window
+    function resizeCanvas(canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        originx = canvas.width / 1;
+        originy = canvas.height / 1;
+    }
+    
+    init();</script>
+
+	<div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div> -->
+    <!-- end of preloader -->
+    
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom fixed-top">
+      
+        <a class="navbar-brand logo-image" href="index.html"><img class="img1" src="images/logo.png" alt="alternative"></a>
+        <a class="navbar-brand logo-image1" href="index.html"><img class="img2" src="images/JU.png" alt="alternative" height="70px" width="180px" ></a>
+       
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-awesome fas fa-bars"></span>
+            <span class="navbar-toggler-awesome fas fa-times"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav ml-auto" style="font-family: 'Nasalization', sans-serif;letter-spacing: 2px; font-size: 20px;">
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="index.html">HOME <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="#intro">ABOUT US</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="#services">EVENTS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="Team/index.html">TEAM</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link page-scroll" href="Sponsors/index.html">SPONSORS </a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="Gallery/index.html">GALLERY</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="#contact">CONTACT</a>
+                </li>
+            </ul>
+            </span>
+        </div>
+        
+    </nav> <!-- end of navbar -->
+    <!-- end of navbar -->
+
+
+
+
+
+<header id="header" class="header">
+ <div class="header-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-top: 10px;" >
+                        <div class="text-container">
+                            <h1 class="text-header text-white">JU RHYTHM'23</h1>
+                            <p  style="font-family: 'Nasalization', sans-serif;letter-spacing: 5px; font-size: 22px"  class="p-heading p-large">Beats Of Imagination</p><br>
+                            <h1><span id="js-rotating"  style="font-family: 'Nasalization', sans-serif;letter-spacing: 5px; font-size: 60px;color: #fff">TECHNO, CULTURAL, SPORTS, BUSINESS, FEST</span></h1>
+                            
+                            <a class="btn-solid-lg page-scroll" href="https://drive.google.com/file/d/16lCWrvNPBeOCagZgDEiYhNDqJMiIW4wz/view?usp=share_link" target="_blank" >Schedule</a>
+                            <a class="btn-solid-lg page-scroll" href="#services">Register Now</a>
+                            <a class="btn-solid-lg page-scroll" href="https://res.cloudinary.com/dctbwsqga/image/upload/v1675836433/Add_a_heading_1_wkxcwb.png" download rel="noopener noreferrer" target="_blank">Guidelines</a><br><br><br>
+                            <span class="bar_content p-heading p-large">
+                                HURRY UP!!!!<BR>
+                                    EARLY BIRD OFFER IS VALID FROM 6TH - 11TH FEB
+                              </span>
+
+                            
+                        </div>
+                    </div> <!-- end of col -->
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </div> <!-- end of header-content -->
+    <section>
+        <div class="wave" id="wave1" style="--i-1;">
+         <div class="wave" id="wave2" style="--i-2;">
+          <div class="wave" id="wave3" style="--i-3;">
+           <div class="wave" id="wave4" style="--i-4;">
+    </section>
+<script>
+    let wave1 = document.getElementById('wave1');
+     let wave2 = document.getElementById('wave2');
+      let wave3 = document.getElementById('wave3');
+       let wave4 = document.getElementById('wave4');
+
+       window.addEventListener('scroll' , function(){
+        let value = window.scrollY;
+
+           wave1.style.backgroundPositionX = 400 + value * 4 + 'px';
+            wave2.style.backgroundPositionX = 300 + value * -4 + 'px';
+             wave3.style.backgroundPositionX = 200 + value * 2 + 'px';
+              wave4.style.backgroundPositionX = 100 + value * -2 + 'px';
+       })
+</script>
+
+
+</header>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Intro -->
+    <div id="intro" class="basic-1" style-="background:#030d1a;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 ">
+                    <div class="text-container animate__animated animate__fadeInLeft animate__delay-1s">
+                        <div class="section-title "  style="font-family: 'Nasalization', sans-serif;letter-spacing: 2px;color:#fff;">About JU-Rhythm</div>
+                        <p class="testimonial-text" style="color: #fff;">JU Rhythm - Beats Of Imagination, one the largest Techno- Cultural-Sports-Business Fest has developed over the years into so much more: a melting pot of Indian and Global culture, a launchpad for upcoming technofreak, a showcase of spectacle.</p>
+
+
+                        <p class="testimonial-text" style="color: #fff;"> This year at JU Rhythm'23 it is all about uniting the power of ideas with the spark of intention.</p>
+                           
+                          <p class="testimonial-text" style="color: #fff;"> We strongly believe every mind has the capacity to a better alternative out of every life. We bring a platform where in the youth come together to explore new paradigm in creativity; which is the bedrock of all growth.</p>
+                           
+                          <p class="testimonial-text" style="color: #fff;"> JU Rhythm each year brings a fresh vibe among everyone & enthusiasm is next level. The rising slope of participation graph makes us to expect more & the most promising one.</p>
+                       
+                    </div> <!-- end of text-container -->
+                </div> <!-- end of col -->
+                <!-- <div class="col-lg-4">
+                        <video style="margin-top: 50px;"  muted autoplay="" loop="" class="viedo" width="100%" height="auto">
+                            <source src="Rhythm final.mp4" type="video/mp4"> 
+                        </video>  end of image-container
+                 </div> end of col --> 
+            </div>
+            
+            <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of basic-1 -->
+    <!-- end of intro -->
+
+    <div class="container-xxl py-5 filter" style="background:url(https://res.cloudinary.com/dlt3bvszo/image/upload/v1674371693/rhythm/div_intro11_ivhxtb.png); width: 100%;" >
+    <div class="container">
+        <div class="col-lg-12">
+            <h2 style="font-family: 'Normal', samarkan;letter-spacing: 2px; line-height: 50px; color: #fff;">PERFORMERS</h2>
+        </div>
+        
+ <div class="row g-3">
+    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+        <div class="team-item">
+            <div class="team-img position-relative overflow-hidden">
+                <img class="img-fluid" style="display:flex; border: 5px solid #fff;" src="https://res.cloudinary.com/dctbwsqga/image/upload/v1675946774/artist/WhatsApp_Image_2023-02-03_at_9.37.48_PM_q76hki_r9crqm.jpg" alt="">
+            </div>
+            <div class=" text-center p-3" >
+                <h3 style="color: #fff;" class="text-uppercase">RANNVIJAY SINGHA</h3>
+                <span style="color: #fff; font-size: 20px;" class="text-span"><b>23th FEB</b></span>
+            </div>
+        </div>
+    </div>
+        
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="team-item">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid" style="display:flex; border: 5px solid #fff;" src="https://res.cloudinary.com/dctbwsqga/image/upload/v1675946780/artist/Rahul_dua_drme2j_u4lank.png" alt="">
+                    </div>
+                    <div class=" text-center p-3" >
+                        <h3 style="color: #fff;" class="text-uppercase">RAHUL DUA</h3>
+                        <span style="color: #fff; font-size: 20px;" class="text-span"><b>24th FEB</b></span>
+                    </div>
+                </div>
+            </div>
+        
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="team-item">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid" style="border: 5px solid #fff;" src="https://res.cloudinary.com/dctbwsqga/image/upload/v1675946775/artist/WhatsApp_Image_2023-02-05_at_8.29.31_PM_dawijh_rbmjoz.jpg" alt="">
+                    </div>
+                    <div class="text-center p-3">
+                        <h3 style="color: #fff;" class="text-uppercase">RAFTAAR</h3>
+                        <span style="color: #fff; font-size: 20px;" class="text-span"><b>25th FEB</b></span>
+                    </div>
+                </div>
+            </div>       
+        </div>
+        
+            
+
+        
+       
+    </div>
+  </div>
+
+
+
+
+<div id="services" class="filter">
+		<div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 style="font-family: 'Normal', samarkan;letter-spacing: 2px;">Events & Rulebook</h2>
+                </div> 
+            </div> 
+            <div class="row">
+                <div class="col-lg-12">
+                   
+                    <div class="button-group filters-button-group">
+                        
+                        <a class="button is-checked" data-filter=".technical"><span>Technical</span></a>
+                        <a class="button" data-filter=".cultural"><span>Cultural</span></a>
+                        <a class="button" data-filter=".business"><span>Business</span></a>
+                        <a class="button" data-filter=".sports"><span>Sports</span></a>
+                        <a class="button" data-filter=".media"><span>Media</span></a>
+                        <a class="button" data-filter=".rulebook"><span>Rulebook</span></a>
+                       
+                    </div> 
+                    <div class="grid">
+
+                    
+                        <div class="element-item technical" >
+                            <a class="popup-with-move-anim" href="#tech-1"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928348/technical/CODE_MANIA_denuxv_jfzip9.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-2"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928342/technical/ALGO_m6jpkj_rasa4p.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-3"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928344/technical/CODE_gzbpn8_prvymv.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-4"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928351/technical/HACKATHON_n5emwe_kj6dfu.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item  technical">
+                            <a class="popup-with-move-anim" href="#tech-5"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928349/technical/CYBER_l1v2gq_we0f5a.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item  technical">
+                            <a class="popup-with-move-anim" href="#tech-6"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928356/technical/PIXELLATE_blmvqq_eizrse.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-7"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928351/technical/MOPIX_tnov4a_bnsfsn.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-8"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675928343/technical/BRIDGE_vcyklz_bwhd2x.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-9"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493392/rhythm/TECHNICAL/PRO_ocx8li.png" alt="alternative"></a>
+                        </div>
+                        
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-10"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493389/rhythm/TECHNICAL/ELITE_zcamkg.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-11"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493385/rhythm/TECHNICAL/SOCCER_d0risf.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-12"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493385/rhythm/TECHNICAL/AMPHI_w7afgx.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-13"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493391/rhythm/TECHNICAL/RUSH_obreg0.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-14"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493386/rhythm/TECHNICAL/CLASH_q9eupl.png" alt="alternative"></a>
+                        </div>
+
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-15"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674493389/rhythm/TECHNICAL/NITRO_q4ojma.png" alt="alternative"></a>
+                        </div>
+                       
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-16"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1675695866/rhythm/TECHNICAL/BGMICOVER_onrxxe.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-17"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1675695866/rhythm/TECHNICAL/FIFACOVER_rgr7ro.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item technical">
+                            <a class="popup-with-move-anim" href="#tech-18"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1675695866/rhythm/TECHNICAL/VALOCOVER_i9nld0.png" alt="alternative"></a>
+                        </div>
+                       
+                       
+                        
+
+                       
+                        <div class="element-item cultural" >
+                            <a class="popup-with-move-anim" href="#project-1"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674464886/rhythm/CULTURAL/MISS_tnovha.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-2"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674463171/rhythm/CULTURAL/DJ_WAR_kimacw.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item  cultural">
+                            <a class="popup-with-move-anim" href="#project-3"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674464595/rhythm/CULTURAL/SOLO_sgvjfi.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-4"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674464594/rhythm/CULTURAL/GROUP_fcszsc.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-5"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674464967/rhythm/CULTURAL/DEBATE_ugrqji.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-6"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674463171/rhythm/CULTURAL/BAND_WAR_abnk1q.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-7"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674465359/rhythm/CULTURAL/FASHION_k1ewno.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-8"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674464886/rhythm/CULTURAL/SOLO_SONG_h9mebg.png" alt="alternative"></a>
+                        </div>
+                       
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-10"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674465218/rhythm/CULTURAL/STREET_DANCE_sycho2.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-11"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674465494/rhythm/CULTURAL/MEME_dorwfa.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-12"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674465141/rhythm/CULTURAL/MANCH_tnnckq.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-13"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674463180/rhythm/CULTURAL/SMASH_ayzc4i.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-14"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674463170/rhythm/CULTURAL/GEET_GATA_CHAL_h8lems.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item cultural">
+                            <a class="popup-with-move-anim" href="#project-15"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dlt3bvszo/image/upload/c_scale,h_300,w_300/v1674466024/rhythm/CULTURAL/saptak_djeu0h.png" alt="alternative"></a>
+                        </div>
+
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-1"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/FUTSAL_mohf74_v4odhv.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-2"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939698/sports/TENNIS_klghde_i2unlr.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-3"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939699/sports/BIKE_apdk8c_quuf8k.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-4"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939699/sports/SNAKES_lh7q8x_e3uyn6.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-5"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939698/sports/ROADIES_cfsigv_rbngs1.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-6"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/CRICKET_ismcs3_kmjh9y.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-7"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/CHESS_sezl8p_yyirzb.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-8"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939698/sports/BASKETBALL_dctan3_qijqlq.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-9"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/LUDO_auieez_yqfmfm.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-10"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/BILLIARDS_hlryjd_b5iecy.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-11"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939699/sports/TREASURE_xsgwbs_q8mb6r.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item sports">
+                            <a class="popup-with-move-anim" href="#sports-12"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675939704/sports/PAINTBALL_lpkpv2_dqafbm.png" alt="alternative"></a>
+                        </div>
+
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-1"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946169/business/IPL_AUCTION_rcshr8_xzegeo.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-2"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946168/business/IPL_AUCTION_3_tibhp1_dacez3.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-3"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946167/business/IPL_AUCTION_4_ts0nkn_wj8080.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-4"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946168/business/IPL_AUCTION_1_ysjw1a_c9cgsg.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-5"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946169/business/IPL_AUCTION_5_ggg63r_cjvipt.png" alt="alternative"></a>
+                        </div>
+                        <div class="element-item business">
+                            <a class="popup-with-move-anim" href="#business-6"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675946169/business/IPL_AUCTION_2_f2lne9_vyfyht.png" alt="alternative"></a>
+                        </div>
+
+                        <div class="element-item media">
+                            <a class="popup-with-move-anim" href="#media-1"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1676017323/media/WhatsApp_Image_2023-02-09_at_6.31.08_PM_1_faokeu.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item media">
+                            <a class="popup-with-move-anim" href="#media-2"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1676017322/media/WhatsApp_Image_2023-02-09_at_6.31.09_PM_lbtryk.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item media">
+                            <a class="popup-with-move-anim" href="#media-3"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1676017322/media/WhatsApp_Image_2023-02-09_at_6.31.08_PM_zpp2da.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item media">
+                            <a class="popup-with-move-anim" href="#media-4"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1676017321/media/WhatsApp_Image_2023-02-09_at_6.31.07_PM_hmialc.jpg" alt="alternative"></a>
+                        </div>
+                        
+                       
+
+                        <div class="element-item rulebook">
+                            <a href="https://drive.google.com/file/d/1sVdqPyCyVOdusbuPPW3fR8OmC5QdB8cz/view?usp=share_link" target="_blank"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675927992/tech_g0otbo_txf1ey.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item rulebook" >
+                            <a href="https://drive.google.com/file/d/1bB78chS27yJ6eykr5nQukG-xc3TVnz_D/view?usp=sharing" target="_blank"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675927992/cultural_wxun3u_f4houx.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item rulebook">
+                            <a href="https://drive.google.com/file/d/1yuJIvHlsG1eTlTpE9jBvtKa1XWCD9ZU6/view?usp=share_link" target="_blank"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675927991/sports_yntjvn_vwyh4d.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item rulebook">
+                            <a  href="https://drive.google.com/file/d/1MflFCxIG2GnLG7J5Sqe6IVQJqbd6Jm1f/view?usp=share_link" target="_blank"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1675927995/business_qahnw7_equodf.jpg" alt="alternative"></a>
+                        </div>
+                        <div class="element-item rulebook">
+                            <a  href="https://drive.google.com/file/d/1tO0fbBGYcNeAGGWKXvW3FT6LdAXDwBN7/view?usp=share_link" target="_blank"><div class="element-item-overlay"></div><img src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_300,w_300/v1676017387/media/WhatsApp_Image_2023-02-10_at_1.47.45_PM_ynawc7.jpg" alt="alternative"></a>
+                        </div>
+
+                        
+                        
+
+
+                    </div> 
+                    
+                            
+                </div> 
+            </div> 
+		</div> 
+    </div>
+
+
+
+
+
+
+
+
+<!-- Lightbox -->
+<div id="tech-1" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934264/technical/poster/codeomania_nkkvf7_nhlc5v.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Code-o-mania</h3>
+            <hr class="line-heading">
+            <p>  In this event, we test your grasp on C++ and Python              programming language through a series of multiple choice questions and coding  questions.</p>
+            <p><b>Individual Entry</b></p>
+            <p><b>Registration fees- Rs.250/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1TSlkWISWHzscU-6ONgRiMLn5jeB6RXNj/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>  
+            
+            
+            
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-2" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934260/technical/poster/algovslogic_loul9y_uwh5jd.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3> Algo vs Logic </h3>
+            <hr class="line-heading">
+            <p> In this event, we take you on a trip back to the basics of any coding language which are data structures and algorithms. we test your grasp on DSA through a series of multiple choice questions and coding questions.</p>
+                <p><b>Individual Entry</b></p>
+                <p><b>Registration fees- Rs.250/-</b></p>
+           
+                <a class="btn-solid-reg" href="https://drive.google.com/file/d/1KmbFvtQa0johApmB_0u460wEpxZHV6VI/view?usp=share_link" target="_blank">Rule Book</a>  
+                <br>
+                <br>
+                <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-3" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027518/codehunt_dikz8i.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Code hunt </h3>
+            <hr class="line-heading">
+            <p> Code Hunt is an informative yet fun competition to participate in. Here you will get a blend of Coding and Entertainment. Hop on and Dig into the problem Statement to win!</p>
+            <p><b>Team size: Maximum 4 and Minimum 2 participants.</b></p>
+            <p><b>Registration fees- Rs.200 per Head/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/19_EkIEna2DZ1RYzPcEK4lBZu-DATdM96/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-4" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934293/technical/poster/HACKATHON_slwmtr_qyblvy.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>HACK-A-THON </h3>
+            <hr class="line-heading">
+                <p> A 12-20 hour event in which teams have to develop an app based on a given theme.
+                    The teams will be given a theme on which they are supposed to develop an application, be it a web app, Android app, iOS app, Windows app or any native app.</p>
+                    <p><b>Team size -Maximum-4 and Minimum-2 Participants</b></p>
+               <p><b>Registration fees- Rs.600/-</b></p>
+           
+               <a class="btn-solid-reg" href="https://drive.google.com/file/d/1FSGb7KSeJSNL1EOljHadxjL9Z-4XLN9v/view?usp=share_link" target="_blank">Rule Book</a>  
+               <br>
+               <br>
+               <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-5" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934271/technical/poster/Cyberbytes_phrpo5_joxxjp.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Cyber-Bytes </h3>
+            <hr class="line-heading">
+            <p> A series of problems to be solved related to cyber security by the use of various hacking and analysis tools.</p>
+                <p><b>Team size: Maximum  2 and Minimum 1 participants.</b></p>
+            <p><b>Registration fees- Rs.400/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1Hg6s1XKhvcq2wtJrMhKmkKw3rZFS96HW/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-6" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934286/technical/poster/pixellate_kbkzxl_fnbrgd.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Pixellate</h3>
+            <hr class="line-heading">
+            <p>Pixelate is a contest in which participants are asked to design graphics using the given set of stock images and other resources</p>
+
+            <p><b>Team Size: Maximum 2 and Minimum 1 participants.</b></p>
+            <p><b>Registration fees- Rs.400/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1PiZpinWoYWr-egAwbarniBoYMlWX4FJb/view?usp=sharing" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-7" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934290/technical/poster/mopix_nvkb2y_zllh79.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Mopix-The Web Designer</h3>
+            <hr class="line-heading">
+            <p>This is a Website Design event in which the students will be asked to design a web based interface for a fictional organization.</p>
+            <p><b>Team Size: Maximum 2 and Minimum 1 participants.</b></p>
+            <p><b>Registration fees- Rs.400/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1aVm7d6SjP-vJlnnTFmbfxFgqRRZOxeIG/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-8" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027511/bridge_vbqz97.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Bridge-O-Mania</h3>
+            <hr class="line-heading">
+            <p>To design and construct the most efficient bridge within the specifications. The bridge must be constructed only from Pop-sticks (150 PROVIDED) and adhesives. No other materials may be used.</p>
+
+
+            <p><b>Team Size: Maximum 3 and Minimum 1 participants.</b></p>
+            <p>Registration fees- Rs.450/-</p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1DaaEV8tfyEy_0ccTUKFdnExPQXfJ2wY1/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-9" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934265/technical/poster/ROBOWAR_uxbct2_olebxg.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>RoboWar Pro</h3>
+            <hr class="line-heading">
+            <p> To design a machine that can fight with one another. The competition will be played on a knock-out basis. The maximum duration of each round will be 2 minutes. The maximum weight of the bot should be 60kg.</p>
+
+            <p><b>Team Size: Maximum 6 and Minimum 1 participant.</b></p>
+            <p>Registration fees- Rs.1000/-</p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1NvDobR9ZJmM9pOuIobSF192hSo_1JNvU/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+<!-- Lightbox -->
+<div id="tech-10" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934283/technical/poster/ELITE_fw6i9f_nsehvs.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Robowar Elite </h3>
+            <hr class="line-heading">
+            <p>The main aim is to design a machine which can fight with one another as well as maintain to maintain the weight of the bot. It will be played on a knock out basis and the maximum duration of the competition will be 2 minutes. The weight of the bot should not exceed 15 Kg.</p>
+                
+            <p><b>Team size-maximum-4 and minimum-1 participants</b></p>
+            <p><b>Registration fees- Rs.800/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1h2QHM9B84Zc92VVz8glVjmCCL8KSIF0g/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-11" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934298/technical/poster/ROBOSOCCER_rvt4dp_abnizm.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Robo Soccer</h3>
+            <hr class="line-heading">
+            <p>Design a manually controlled robot wired or wireless that can play soccer. This is a 1 on 1 type game. Robots will be placed in different halves of the arena with ball in center of arena. Each team will try to score a goal by pushing the ball. Team with more number of goals will win the match.</p>
+
+            <p><b>Team Size: Maximum 2 and Minimum 1 participant.</b></p>
+            <p><b>Registration fees- Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1ckhCXtJeaXM38oJbGCgELYJ3fZ9MgkT6/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-12" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027143/amphibot_dwxf3z.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Amphibot</h3>
+            <hr class="line-heading">
+            <p>Design a manually controlled wired or wireless ROBOT that can be operated manually within the specified dimensions and can travel through both land and water. The robot that will complete the specified task in least time will be the winner.</p>
+
+            <p><b>Team Size: Maximum 3 and Minimum 1 participant.</b></p>
+            <p><b>Registration fees- Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1AsGQ6_HrED1I_JgejyqWBLlMUKRqwa6y/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="tech-13" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027143/roborush_limlhe.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Robo Rush</h3>
+            <hr class="line-heading">
+            <p>To prepare manual bots which need to cross the plain arena through hurdles and then climb up to inclined arena to put flag down and release the balls. Release ball are to be put in their respective goals to score points.</p>
+
+            <p><b>Team Size: Maximum 2 and Minimum 1 participant.</b></p>
+            <p><b>Registration fees- Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1MRxKyBnaNnLIK_8xPXHEpSqdV_4Iuwqh/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="tech-14" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027142/CLASH_mtk3gx.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Clash-N-Clatter </h3>
+            <hr class="line-heading">
+            <p>The game aims at clashing and clattering of two solid bots connected by rope such that they try to pull each other in the famous game TUG of WAR. The bot wins if it drags the other bot across the center line.</p>
+                
+            <p><b>Team size -Maximum-2 and Minimum-1 Participants</b></p>
+            <p><b>Registration Fees-500</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1uMWXmbVI7WBTM3z3Sa5xNuPHqMeWIP_r/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+<div id="tech-15" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676027144/rcnitro_qojnpc.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>RC Nitro Car</h3>
+            <hr class="line-heading">
+            <p>Formula 1 racing but with nitro powered cars and being driven by our very own participants. It is one of a kind event with knock out participation.</p>
+                
+            <p><b>Team size -Maximum-6 and Minimum-1 Participants</b></p>
+            <p><b>Registration Fees-1000</b></p>
+           
+            <a class="btn-solid-reg" href="https://drive.google.com/file/d/1aikS53-10Abd5jtxg2mrQp18bpx3YlNY/view?usp=share_link" target="_blank">Rule Book</a>  
+            <br>
+            <br>
+            <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+
+    <div id="tech-16" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934277/technical/poster/BGMIFINAL_hnw3gt_tczf4w.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>BGMI</h3>
+                <hr class="line-heading">
+                <p>BGMI is an online multiplayer Mobile Battle Royale for Indian players. The event will consist of 20 teams in the lobby and the last team standing will win the battleground.</p>
+                <p><b>Team size -Maximum-4 and Minimum-1 Participants</b></p>
+                <p><b>Registration fees- Rs.800/-</b></p>
+               
+                <a class="btn-solid-reg" href="https://drive.google.com/file/d/1GLVD9WMG6UaPhr2b0v4y3ihBHcVybRob/view?usp=share_link" target="_blank">Rule Book</a>  
+                <br>
+                <br>
+                <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div>
+    <div id="tech-17" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934298/technical/poster/FIFAFINAL_tfq0mo_nnb04g.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>FIFA</h3>
+                <hr class="line-heading">
+                <p>A recreation of the original FIFA held in stadiums, it is a realistic game with real players and high graphics. It is a fun 1v1 game to play and hop on easily as the controls are simple. FIFA is made by EA sports and its really cool to play and simple to enjoy upon!</p>
+                <p><b>Individual Entry</b></p>
+                <p><b>Registration fees- Rs.250/-</b></p>
+               
+                <a class="btn-solid-reg" href="https://drive.google.com/file/d/1A9k_My1r0-gmfjB5dtTzpCHE2SrzyrvC/view?usp=share_link" target="_blank">Rule Book</a>  
+                <br>
+                <br>
+                <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div>
+    <div id="tech-18" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675934273/technical/poster/VALORANT_zo9chu_xnjsck.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>Valorant</h3>
+                <hr class="line-heading">
+                <p>A 5v5 Battle Royale competitive game that requires your Skills, Ability Usage and Aim. You Pad Up and Overcome the opponents with your IQ and Character Usage!</p>
+                <p><b>Team size- Team of 5 </b></p>
+                <p><b>Registration fees- Rs.1000/-</b></p>
+               
+                <a class="btn-solid-reg" href="https://drive.google.com/file/d/1ZbSp3ANbrSXSaTmlzj8fbZsWyfHPGikP/view?usp=share_link" target="_blank">Rule Book</a>  
+                <br>
+                <br>
+                <a class="btn-solid-reg" href="https://rzp.io/l/iliiBBJ1g" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a>            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div>
+
+
+
+
+    <!--Cultural-->
+    <!-- Lightbox -->
+    <div id="project-1" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943443/cultural/poster/cultural_creatives4_m7zbbj_z8ncmv.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>Mr. And Miss Rhythm</h3>
+                <hr class="line-heading">
+                <h6>"Live life like you are on a ramp!"</h6>
+                <p>To explore your fashion skills and your personality, MR. and MISS. RHYTHM is the right event for you. The crown of RHYTHM can be yours. So, buckle up and kick start your preparations.
+                    <br>
+                    <br>
+                    <b>Individual Entry</b></p>
+                <p><b>Registration fees- Rs.300/-</b></p>
+               
+                <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of lightbox-basic -->
+    <!-- end of lightbox -->
+
+    <!-- Lightbox -->
+    <div id="project-2" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943438/cultural/poster/cultural_creatives6_xokivq_bscfae.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>DJ War</h3>
+                <hr class="line-heading">
+                <h6>Let's make every beat count and dance until you drop.</h6>
+                <p>To get the fun started and to make everyone groove on your beats .....Here it is the D J war.... So put your hands up in the air and enjoy.</p>
+                    <p><b>Individual Entry</b></p>
+                <p><b>Registration fees- Rs.700/-</b></p>
+                <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of lightbox-basic -->
+    <!-- end of lightbox -->
+
+    <!-- Lightbox -->
+    <div id="project-3" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676028233/cultural/cultural_creatives3_lxztgm.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>Solo Dance</h3>
+                <hr class="line-heading">
+                <h6>"Dancing with your feet is one bit, dancing with your heart is another, dance is the purest form of worship, a means to express like no other!"</h6>
+                <p>The SOLO DANCE competition by RHYTHM'23 is here to let you exhibit your emotions when the words don’t do them justice. Get ready to speak your heart out through this tussle of dance.</p>
+                <p><b>Individual Entry</b></p>
+                <p><b>Registration fees- Rs.300/-</b></p>
+                <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of lightbox-basic -->
+    <!-- end of lightbox -->
+
+    <!-- Lightbox -->
+    <div id="project-4" class="lightbox-basic zoom-anim-dialog mfp-hide">
+        <div class="row">
+            <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+            <div class="col-lg-8">
+                <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676028233/cultural/cultural_creatives1_lnln9a.png" alt="alternative">
+            </div> <!-- end of col -->
+            <div class="col-lg-4">
+                <h3>Group Dance</h3>
+                <hr class="line-heading">
+                <h6>"Dance is the joy of movement and the heart of life. All you need is connection and music."</h6>
+                <p>Bring in your partner or your gang for the ultimate GROUP DANCE mania. Get on board today to experience the vibe!</p>
+                <p><b>Team Size- 7-25 members</b></p>
+                <p><b>Registration fees- Rs.300/-(per person)</b></p>
+                <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of lightbox-basic -->
+    <!-- end of lightbox -->
+
+
+
+<!-- Lightbox -->
+<div id="project-5" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943445/cultural/poster/cultural_creatives9_vnl4e1_njrdmr.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Debate</h3>
+            <hr class="line-heading">
+            <p>Debating is not always a full-blown argument. It rather gives you the chance to keep your points on topics, quick response, presentation, research skills.</p>
+            <p>Experience the power of words on a huge platform. Get ready!!!!</p>
+            <p><b>Individual Entry</b></p>
+            <p><b>Registration fees- Rs.300/-</b></p>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-6" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943448/cultural/poster/cultural_creatives7_lms8mp_aeasa8.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Band War</h3>
+            <hr class="line-heading">
+            <p>Just as everything is fair in love and war, we have a brand new event named as the band war. Bring out all your zeal and enthusiasm of including instruments as well as your vocals in a war of music. C'mon and grab the opportunity of witnessing a live Band War!</p>
+            <p><b>Team Size- 2-10 members</b></p>
+            <p><b>Registration fees- Rs.300/-(per person)</b></p>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-7" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943564/cultural/poster/WhatsApp_Image_2023-02-09_at_5.19.45_PM_ymgue9.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Fashion Show</h3>
+            <hr class="line-heading">
+            <p>The best things in life are often waiting for you at the exit ramp of your comfort zone, so buckle up and get ready to rock the ramp with your unique theme and set an example of a FASHION icon.</p>
+            <p><b>Team Size- 10-20 members</b></p>
+            <p><b>Registration fees- Rs.250/-(per person)</b></p>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-8" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943435/cultural/poster/cultural_creatives5_gxokde_fu66qh.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Solo Singing</h3>
+            <hr class="line-heading">
+            <p>Music is love in search of a word and your words can create emotions in form of a song. Then what are you waiting for, give your words a wings of emotions and fly in the air of melody.</p>
+            <b><p>Individual Entry</p></b>
+            <b><p>Registration fees- Rs.300/-</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+ <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-10" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dp8singbq/image/upload/c_scale,h_500/v1676028232/cultural/cultural_creatives2_ebqeay.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Street Dance</h3>
+            <hr class="line-heading">
+            <h6>“Street dance is the hidden language of the soul of the body”</h6>
+            <p>Dance, the moment of random music and limited time period. Street Dance expressed your idea and emotion, releasing energy , or simply taking delight in the movement itself.</p>
+            <b><p>Team Size- 3-6 members</p></b>
+            <b><p>Registration fees- Rs.1500/- per team</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-11" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943401/cultural/poster/cultural_creatives11_pqpf1b_oxnwod.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Meme Making</h3>
+            <hr class="line-heading">
+            <h6>Ears wide open? </h6>
+            <p>To all the memers or the meme makers here's an opportunity for you to outshine your talent of creating the most giggling meme ever!
+                Bring it out for all that you have in-store with you!
+                </p>
+            <b><p>Team Size - 2 members</p></b>
+            <b><p>Registration fees- Rs.450/- (per team)</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-12" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943403/cultural/poster/cultural_creatives14_al2llx_hdyech.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Manch-e-pradarshan</h3>
+            <hr class="line-heading">
+            <h6>Are you a Drama Queen or a king????</h6>
+            <p>If Yes, than this is for you all. Bring out your theatre skills to the world and express yourself in the vest version.
+               <br> "Manch-e-Pradarshan par apka hardik swagat hai!"</p>
+            <b><p>Team Size- 25 (Max)  members</p></b>
+            <b><p>Registration fees- Rs.250/-(per person)</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-13" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675945784/cultural/poster/cultural_creatives15_vr9sec_pqjha2.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Smash The dub</h3>
+            <hr class="line-heading">
+            <p>Very well known "Actions speak louder than words". Similarly we have an event that is "Smash the Dub". This is with a twist. A video will be displayed without the audio and all you have to do is identify the display. The action here requires no voice to be known!</p>
+            <b><p>Team Size- 2 members</p></b>
+            <b><p>Registration fees- Rs.450/-</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-14" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943455/cultural/poster/cultural_creatives8_uimruf_row7hi.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Geet Gata Chal (Antakshri)</h3>
+            <hr class="line-heading">
+            <h6>Gana aaye ya naa aaye gana cahiyeee....</h6>
+            <p>Right na???<br>
+                Bring your team and enjoy the world full of songs in our exciting event “GEET GATA CHAL”. But remember, delay will lead to defeat! Be a part of this fun event now and be the best of it.</p>
+            <b><p>Team Size- 3-4 members</p></b>
+            <b><p>Registration fees- Rs.850/-(per team)</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<!-- Lightbox -->
+<div id="project-15" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675943409/cultural/poster/cultural_creatives13_k0f3fa_iffs96.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>SAPTAK - The Battle of Instruments</h3>
+            <hr class="line-heading">
+            <p>Saptak talks about the battle of instruments! Fighting a battle must not only be confined to the battlefields but also to the field of JU Rhythm 2023! No vocals will be used and Saptak, the battle of instruments, will only take place using musical instruments.</p>
+            <b><p>Individual Entry</p></b>
+            <b><p>Registration fees- Rs.300/-</p></b>
+            <a class="btn-solid-reg" href="https://rzp.io/l/JjaqvSs" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+
+
+
+  <!--Business-->
+  <div id="business-1" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946239/business/poster/IPL_Auction_izbmdb_xbcfyg.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>IPL AUCTION</h3>
+            <hr class="line-heading">
+            <p>
+                Are you a diehard cricket fan?
+                If yes, then IPL Auction is a platform where you will get to experience the phenomenon of live
+                bidding by spending virtual money.
+                The event will consist of two major rounds, where your cricketing knowledge and skills would
+                be put into a test, giving you the zeal to reach the victory.<br><br>
+                Round-1 is going to be a quiz based on critical cricket knowledge and then the Top 8 Teams will
+                move on to the next round.<br><br>
+                The Round-2 is the actual showdown, the real time bidding arena, where you will have to bid
+                and acquire your dream team.</p>
+                <b><p>Team Size: 3-5 Members</p></b>
+                <b><p>Registration fees- Rs.250/- Head</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="business-2" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946239/business/poster/The_Pitchers_wll8wv_ofm1rp.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>THE PITCHERS</h3>
+            <hr class="line-heading">
+            <p>
+                Convincing someone to buy a product or invest in an idea takes a lot of toll on your verbal skills
+                and if it works out, you are a true marketing and sales agent.
+                The Pitchers is an event which will comprise of 2 rounds, the first one is going to be a
+                knowledge testing quiz and following this the Top 10 Teams will walk into the pitching ground,
+                where they will have to pitch for and sell the given product selected from the sectors allotted to
+                them.
+                Gear up champs, because it’s time to sell your product and showcase your verbal intellect to
+                achieve the victory. </p>
+                <b><p>Team Size: 2-5 Members</p></b>
+                <b><p>Registration fees- Rs.250/- Head</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="business-3" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946239/business/poster/The_Big_Brand_Theory_l90mxc_w5a0tb.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>THE BIG BRAND THEORY</h3>
+            <hr class="line-heading">
+            <p>We are all fond of big brands and companies, but have you ever imagined, if these established
+                names get into a battle of words and wisdom?
+                If not yet, please start thinking, as its high time to occupy these recognized names and defend
+                the eternity of their ideas and marketing.
+                TBBT brings you the battleground of enterprises, where you will have to go through three
+                enlightening rounds of knowledge and communication, which will direct your path to victory.
+                Round one will be a challenging quiz about the market, Round two is going to be an intellectual
+                stage fight between the companies and the final round will be the last pitch highlighting the
+                USP’s and Earnings.</p>
+                <b><p>Team Size: 3-5 Members</p></b>
+                <b><p>Registration fees- Rs.250/- Head</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="business-4" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946238/business/poster/Fast_And_Furious_jvc9rx_bovvog.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>FAST & FURIOUS</h3>
+            <hr class="line-heading">
+            <p>When it comes to winning and survival, every human tries his best and at that point, what
+                matters the most is the destination and not the pathway.
+                So here we bring the extravaganza of hooks and crooks, where you will have to bring a list of
+                items to the table and complete certain tasks in a given time period.
+                No matter if you Beg, Borrow or Steal, but it’s just you have to be there and deliver your best.
+                This event will have a single round, which is going to be the decider of the faith for the
+                participants and will provide the glory of winning.</p>
+
+                <b><p>Team Size: 3-5 Members</p></b>
+                <b><p>Registration fees- Rs.250/- Head</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="business-5" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946238/business/poster/The_End_Game_q9tm18_s1kvqa.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>THE END GAME</h3>
+            <hr class="line-heading">
+            <p>Business is not just about selling and purchasing, it’s about testing your knowledge and staying
+                up till the last breath.
+                The End Game is a stage where extreme scenarios, conditions and circumstances will be at par
+                and you will be stuck to come out of the space, but whosoever will have the energy to survive till
+                the last breath, will be a warrior.<br>
+                The End Game will have two different rounds, the first one will be a buzzer round and the final
+                round will decide based on your knowledge about startups and entrepreneurs.<br>
+                The top 10 Teams from the first round will enter into the final round.</p>
+
+                <b><p>Team Size: 2-5 Members</p></b>
+                <b><p>Registration fees- Rs.1000/- per Team</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="business-6" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675946238/business/poster/The_Big_Bull_rzua95_u1xi5e.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>THE BIG BULL</h3>
+            <hr class="line-heading">
+            <p>Over the years, the inclination towards stock trading has completely transformed the market
+                scenario.
+                And this time, why not put yourselves into the shoes of Bear and Bull and shake the market
+                through your efficient trading skills.
+                <br>
+                Let’s bring out the hidden analyzer and trader in you and test your marketing strategy to
+                optimize the profits.
+                The event will comprise of 3 different rounds, based on Buying, Selling and Holding your stocks
+                by fluently spending the virtual credits in hand and after the completion of all the rounds, the
+                maximum rating holder will emerge as the baton holder.</p>
+                <b><p>Team Size: 2-5 Members</p></b>
+                <b><p>Registration fees- Rs.250/- Head</p></b>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/gIxDtZEdtE" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+
+
+<!--Sports-->
+<div id="sports-1" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939743/sports/posters/sports2_zshagy_qmoq0u.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>FUTSAL</h3>
+            <hr class="line-heading">
+            <p>Futsal is the FIFA-recognised form of small-sided indoor football, (variation of mini football played on a hard court, smaller than a football pitch). It is a game of high pressure and energy. Futsal is played between two teams of five players each, one of whom is the goalkeeper. The game emphasizes control, improvisation, creativity and technique. A standard match consists of two equal periods of 20 minutes.</p>
+            <p><b>Team Size: 5 members and 3 substitutes ( total 8 )</b></p>
+            <p><b>Registration fees - Rs.1500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-2" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939739/sports/posters/sports3_sdddjr_cobeym.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Table – Tennis</h3>
+            <hr class="line-heading">
+            <p>Table tennis is a sport in which two hit a lightweight ball, also known as the ping-pong ball, back and forth across a table using small solid rackets. The game takes place on a hard table divided by a net. Play is fast and demands quick reactions. Spinning the ball alters its trajectory and limits an opponent's options, giving the hitter a great advantage. It is the game of reaction speed and fluctuating strategies.</p>
+            <p><b>Team Size: 1 members</b></p>
+            <p><b>Registration fees - Rs.250/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-3" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939749/sports/posters/sports4_vxw8vf_yrlikw.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Slow Bike </h3>
+            <hr class="line-heading">
+            <p>Slow biking is to complete an eleven-meter track as slowly as possible. Your feet are not allowed to touch the ground and your bicycle needs to stay within the boundaries. Where today everyone races through traffic, completely occupied by music or their cellphones, there is Slowbiking to show us we can do it differently. It pushes us to take a breather and only have attention for balance and focus. </p>
+            <p><b>Team Size: 1 members</b></p>
+            <p><b>Registration fees - Rs.300/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-4" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939751/sports/posters/sports5_lg4fyy_lfzxcm.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Snakes & Ladder</h3>
+            <hr class="line-heading">
+            <p>Snakes and ladders is an ancient Indian board game that’s regarded today as a worldwide classic. It requires two or more players and takes place on a board with numbered, gridded squares. Throughout the board, there are snakes and ladders which connect different squares. Players roll a die and navigate the board. Landing on a ladder advances a player to a square further up the board, while landing on a snake means they have to go back to a previous square. The aim of the game is to reach the final square.</p>
+            <p><b>Team Size-2 member </b></p>
+            <p><b>Registration fees - Rs.500/- per Team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-5" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939751/sports/posters/sports6_cw9nj0_m6fpos.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Roadies</h3>
+            <hr class="line-heading">
+            <p>"No Guts !!!<br>
+            "No Glory " <br>
+            Brain, strength and abilities all comes on a single arena. Let your opponent get nervous just by your moves. Player will participate in various tasks that challenge their physical, social and mental strength. Participate to experience thrill and fun.</p>
+            <b>Participation open for both boys & girl.</b>
+            <p><b>Team Size - 2 member </b></p>
+            <p><b>Registration fees - Rs.600/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-6" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939727/sports/posters/sports7_njuqxk_pammmn.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Gully Cricket</h3>
+            <hr class="line-heading">
+            <p>Gully cricket is an unofficial form of cricket originating mainly from India, Pakistan, Bangladesh and Sri Lanka. When the game of cricket is played in small lanes, known as 'gully' in Hindi (the language mainly used in India, Pakistan, Bangladesh), the game is called 'gully cricket'.</br></p>
+            <p><b>Team will consist of 7 members including minimum 1 Girl. </b></p>
+            <p><b>Team Size-   7 members ( 1 girl and 6 boys )</b></p>
+            <p><b>Registration fees - Rs.1500/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-7" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939727/sports/posters/sports8_mdrbsz_me1tng.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Chess</h3>
+            <hr class="line-heading">
+            <p>Chess is an abstract strategy game and involves no hidden information. It is played on a square chessboard with 64 squares arranged in an eight-by-eight grid. At the start, each player (one controlling the white pieces, the other controlling the black pieces) controls sixteen pieces: one king, one queen, two rooks, two knights, two bishops, and eight pawns. The object of the game is to checkmate the opponent’s king, whereby the king is under immediate attack (in “check”) and there is no way to remove it from attack on the next move. There are also several ways a game can end in a draw.</p>
+            <p><b>Team Size - 1 member </b></p>
+            <p>Registration fees - Rs.250/-</p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+<div id="sports-8" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939735/sports/posters/sports9_tpxmiu_ltbbqq.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>3 on 3 Basketball</h3>
+            <hr class="line-heading">
+            <p>3x3 basketball (pronounced three-ex-three[1]) is a variation of basketball played three-a-side, with one backboard and in a half-court setup. This basketball game format is currently being promoted and structured by FIBA, the sport's governing body. Its primary competition is an annual FIBA 3X3 World Tour, comprising a series of Masters and one Final tournament, and awarding six-figure prize money in US dollars.</p>
+            <p><b>Team Size- total   4 Player ( 3 players and 1 substitues )</b></p>
+            <p><b>Registration fees- Rs.750/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+<div id="sports-9" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939735/sports/posters/sports1_zuknhg_kbohau.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Live Ludo</h3>
+            <hr class="line-heading">
+            <p>Live- ludo is a strategy based game. Itis a fun and innovative board game, that is filled with lots of surprises and elements on your board. Players race their four tokens from start to finish according to the role of the dice. The game and its variations are popular in many countries and under various names.</p>
+            <p><b>Team Size- Total   5 Player</b></p>
+            <p><b>Registration fees - Rs.1000/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> 
+
+<div id="sports-10" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939723/sports/posters/sports10_vbi3ua_eygjxn.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Billiards</h3>
+            <hr class="line-heading">
+            <p>Billiards is a game played on a large table, in which you use a long stick called a cue to hit balls against each other or into pockets around the sides of the table. </p>
+            <p><b>Team Size - Total 2 Player</b></p>
+            <p><b>Registration fees - Rs.700/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+
+<div id="sports-11" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939739/sports/posters/sports11_1_wxfyg0_jenssy.png" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Treasure Hunt</h3>
+            <hr class="line-heading">
+            <p>It is a game in which each person or team attempts to be first in finding something that has been hidden, using written directions or clues.</p>
+            <p><b>Team Size - Total 4 Player </b></p>
+            <p><b>Registration fees - Rs.1000/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<div id="sports-12" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1675939793/sports/posters/IMG-20230208-WA0042_1_l91lme.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>PAINTBALL</h3>
+            <hr class="line-heading">
+            <p><b>Aim!! <br>    Shoot!! <br>      Conquer!! </b><BR>
+
+                Paintball is a challenging team sport that includes strategy, shooting, eliminating, and of course unlimited fun. In this game, generally two (or more) different teams gather in a specially designated area and wage a war against each other.</p>
+            <p><b>Team Size - Total 5 Player </b></p>
+            <p><b>Registration fees - Rs.1500/- per team</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/3FYU7qL9K" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<!-- end of lightbox-basic -->
+<div id="media-1" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1676017323/media/WhatsApp_Image_2023-02-09_at_6.31.08_PM_1_faokeu.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>REEL MAKING</h3>
+            <hr class="line-heading">
+            <p><b>“Do it for the reels”</b><BR>
+
+                Over two billion people interact with reels on Instagram every month. Now here is an opportunity for you to join them. <BR>
+                It’s time to get viral with your reels.  Use your imagination, creativity, glamour and presenting skills to do whatever it takes to win in our Reel-Making competition.<br>
+                Exciting prizes for the winners.<br>
+                So Feel it & Reel It!
+                </p>
+
+            <p><b>Individual Participants</b></p>
+            <p><b>Registration Fee - 500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/zm88niMDiB" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<div id="media-2" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1676017322/media/WhatsApp_Image_2023-02-09_at_6.31.09_PM_lbtryk.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Vlogging for Storytelling</h3>
+            <hr class="line-heading">
+            <p><b>“To tell your story well, ring the vlogging bell “</b><BR>
+
+                Vlogging and storytelling are a match made in heaven. You don’t need a fancy camera, the best gear or anything other than what you have right now in order to get started with vlogging! Just look around and strategize your storytelling through a Vlog!</p>
+            <p><b>Individual entry </b></p>
+            <p><b>Registration fee - Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/zm88niMDiB" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<div id="media-3" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1676017322/media/WhatsApp_Image_2023-02-09_at_6.31.08_PM_zpp2da.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>Bloggers' Park</h3>
+            <hr class="line-heading">
+            <p><b> ‘Blogging is a conversation, not a code’</b><BR>
+                <br>
+                We want you to converse – converse with others, and with yourself.
+                If your conversation is interesting, arresting, and engaging you have an opportunity to win big prizes.
+            <p><b>Individual Entry</b></p>
+            <p><b>Registration fee - Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/zm88niMDiB" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+
+<div id="media-4" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-8">
+            <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/c_scale,h_500/v1676017321/media/WhatsApp_Image_2023-02-09_at_6.31.07_PM_hmialc.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4">
+            <h3>PODCASTERS' PARADISE</h3>
+            <hr class="line-heading">
+            <p><b>"Make it all about the audience, and you can never go wrong"</b><BR>
+                <br>
+                Podcasting is just a talk that can be amusing or pleasing but can also be terrifying or unloved. It doesn't have a particular form. It's just about the relationship you build with your listeners and the relationship the listeners have with you!!</p>
+            <p><b>Individual Entry</b></p>
+            <p><b>Registration fee - Rs.500/-</b></p>
+           
+            <a class="btn-solid-reg" href="https://rzp.io/l/zm88niMDiB" target="_blank">Register Now</a> <a class="btn-outline-reg mfp-close as-button" href="#projects">BACK</a> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div>
+<!-- end of lightbox -->
+
+
+
+<!-- Lightbox -->
+<div id="guideline" class="lightbox-basic zoom-anim-dialog mfp-hide">
+    <div class="row">
+        <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
+        <div class="col-lg-12">
+            <img class="img-fluid" src="https://res.cloudinary.com/dm8plkfnz/image/upload/v1647930671/rhythm/image/guidelines-01_1_f3vd5d.jpg" alt="alternative">
+        </div> <!-- end of col -->
+        <div class="col-lg-4"> 
+        </div> <!-- end of col -->
+    </div> <!-- end of row -->
+</div> <!-- end of lightbox-basic -->
+<!-- end of lightbox -->
+
+
+    <!-- Contact -->
+    <!-- Contact -->
+    <div id="contact" class="form-2">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-7">
+                  <div class="text-container">
+                      <div class="section-title text-white" style="font-family: 'Nasalization', sans-serif;letter-spacing: 2px;">CONTACT</div>
+                      <p class="text-white">In case of any query or problem feel free to visit our office or contact the following numbers for the same </p>
+                      <ul class="list-unstyled li-space-lg">
+                        <li class="address text-white"><i class="fas fa-map-marker-alt"></i>Plot No. IS-2036 to IS-2039 Ramchandrapura Industrial Area<br> Jaipur, Sitapura, Vidhani, Rajasthan 303905</li>
+                        <li><i class="fas fa-phone "></i><a class="text-white" href="tel:7037757957">Technical Head: +91 7037757957</a></li>
+                        <li><i class="fas fa-phone"></i><a class="text-white" href="tel:9024011392">Cultural Head: +91 9024011392</a></li>
+                        <li><i class="fas fa-phone "></i><a class="text-white" href="tel:7014597607">Sports Head: +91 7014597607</a></li>
+                        <li><i class="fas fa-phone"></i><a class="text-white" href="tel:9649120557">Business Head: +91 9649120557</a></li>
+                        <li><i class="fas fa-envelope"></i><a class="text-white" href="mailto:sdo@jecrcu.edu.in">sdo@jecrcu.edu.in</a></li>
+                      </ul>
+                      <h3 class="text-white" style="font-family: 'Nasalization', sans-serif;letter-spacing: 2px;">Follow Us On Social Media</h3>
+
+                      <span class="fa-stack">
+                        <a target="_blank" href="https://www.facebook.com/JecrcUniversity/">
+                            <span class="hexagon"></span>
+                            <i class="fab fa-facebook-f fa-stack-1x"></i>
+                        </a>
+                    </span>
+                    <span class="fa-stack">
+                        <a target="_blank" href="https://instagram.com/rhythm.ju?utm_medium=copy_link ">
+                            <span class="hexagon"></span>
+                            <i class="fab fa-instagram fa-stack-1x"></i>
+                        </a>
+                    </span>
+                    <span class="fa-stack">
+                        <a target="_blank" href="https://www.linkedin.com/company/student-council-jecrc-university/">
+                            <span class="hexagon"></span>
+                            <i class="fab fa-linkedin-in fa-stack-1x"></i>
+                        </a>
+                    </span>
+                  </div> <!-- end of text-container -->
+              </div> <!-- end of col -->
+              <div class="col-lg-5">
+                  <div class="image-container">
+                      <img class="img-fluid" src="https://res.cloudinary.com/dctbwsqga/image/upload/v1675927997/contact_gcnlum_nxdhyg.png" alt="alternative" style="border-radius: 10%; border: 2px solid #030d1a;">
+                  </div> <!-- end of image-container -->
+              </div> <!-- end of col -->
+              <div class="col-lg-12">
+                <h2 style="font-size:15px" class="text-center text-white">© Copyright JU-RHYTHM 2023. All Rights Reserved </h2>
+                <h2 style="font-size:15px" class="text-center text-white">Designed and developed by <a style="color:#fff;" href="https://www.linkedin.com/in/varun-choudhary-3271051b8">Varun 
+                Choudhary</a> | <a style="color:#fff;" href="https://www.linkedin.com/in/ashish-bishnoi-69a9691b9/">Ashish Bishnoi</a></h2>
+
+                <h2 style="font-size:15px" class="text-center text-white"><a style="color:#fff;" href="https://drive.google.com/file/d/1IZFeV7eijppBbUwMK2sWiUIxb54aQYhx/view?usp=sharing" target="_blank">Terms & Conditions</a></h2>
+            </div>
+          </div> <!-- end of row -->
+      </div> <!-- end of container -->
+  </div> <!-- end of form-2 -->
+  <!-- end of contact -->
+
+
+
+
+    	
+    <!-- Scripts -->
+    
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script> <!-- Swiper for image and text sliders -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Morphext/2.4.4/morphext.min.js"></script> <!-- Morphtext rotating text in the header -->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script src="js/scripts.js"></script> <!-- Custom scripts -->
+
+</body>
 </html>
